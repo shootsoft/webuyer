@@ -37,16 +37,21 @@ module.exports = {
         var sort = cols[order[0].column] + ' ' + order[0].dir 
         //sails.log.debug(limit)
         var query;
+        var cond = {}
         if(search && search.value){
             query = Product.find({
                 or : [
-                    //{ name: { 'contains': search.value }} ,
+                    { item_name: { 'contains': search.value }} ,
                     { item_desc: { 'contains': search.value }}
                 ],
                 limit: limit, 
                 skip: skip,
                 //sort: sort
             })
+            cond = {or: [
+                    { item_name: { 'contains': search.value }} ,
+                    { item_desc: { 'contains': search.value }}
+                ]}
         } else {
             query = Product.find({
                 limit: limit, 
@@ -55,7 +60,7 @@ module.exports = {
             })
         }
 
-        Product.count().exec(function countCB(error, count) {
+        Product.count(cond).exec(function countCB(error, count) {
             query.sort(sort).then(function(data){
                 //sails.log.debug(data)
                 return res.json(

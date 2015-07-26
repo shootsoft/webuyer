@@ -6,19 +6,27 @@ $(document).ready(function() {
 
 var app = angular.module('cartApp', ['ngCart'])
 app.controller('cartCtrl', function($scope) {
+	/**
+	* init the controller
+	*/
     $scope.init = function() {
     	$scope.db = {}
         $scope.products = []
-        $scope.summary = 0
+        $scope.total_price = 0
+        $scope.total_item = 0
         $scope.weight = 0
         $scope.ship = 0
         $scope.config = {
         	per_kg : 35
         }
-        
+        //load data from local storage
+        $scope.load()
         $scope.init_dataTable()
     }
 
+    /**
+    * init the DataTable
+    */
     $scope.init_dataTable = function() {
         $('#dataTables-example').DataTable({
             "processing": true,
@@ -43,7 +51,6 @@ app.controller('cartCtrl', function($scope) {
             "rowCallback": function(row, data, index) {
             	$scope.db[data.itemid] = data
                 $('td:eq(0)', row).html('<img class="responsive" alt="" src="' + data.thumb_imgs + '" />')
-                //$('td:eq(1)', row).html(data.price)
                 $('td:eq(3)', row).html('<select class="form-control" id="quality' + data.itemid + '"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>'
                 	+'<button onclick="hack_add(' + data.itemid + ')" data-toggle="modal" data-target="#cart" class="btn btn-success">Order</button>')
             },
@@ -54,25 +61,32 @@ app.controller('cartCtrl', function($scope) {
 
             }
 
-        });
+        })
     }
 
+    /**
+    * add a product into the cart
+    */
     $scope.add_product = function(itemid, quality){
     	
     	var found = false
     	var price = 0
     	quality = parseInt(quality)
+
+    	//check if the product has already in the cart, modify its quality
     	for (var i in $scope.products){
     		if($scope.products[i].itemid == itemid){
     			$scope.products[i].quality = parseInt($scope.products[i].quality) + quality
     			found = true
     			price = $scope.products[i].price
+    			$scope.total_item += quality
     			break
     		}
     	}
 
     	var d = $scope.db[itemid]
 
+    	// if not in the cart add it
     	if(!found && d!=undefined){
     		$scope.products.push({
     			itemid: d.itemid,
@@ -81,18 +95,97 @@ app.controller('cartCtrl', function($scope) {
     			price : d.price
     		})
     		price = d.price
+    		$scope.total_item += quality
     	}
-    	$scope.summary += price * quality
-    	$scope.$apply();
+    	$scope.total_price += price * quality
+    	$scope.$apply()
+    	$scope.init_input()
+    	$scope.save()
     }
 
+    /**
+    * remove a product from the cart
+    */
+    $scope.remove = function(itemid){
+    	var found = -1
+    	for (var i in $scope.products){
+    		if($scope.products[i].itemid == itemid){
+    			found = i
+    			$scope.total_price -= $scope.products[i].price * $scope.products[i].quality
+    			$scope.total_item -= parseInt($scope.products[i].quality)
+    			break
+    		}
+    	}
+    	if(found > -1){
+    		$scope.products.splice(found,1)
+    	}
+		$scope.$apply()
+		$scope.save()
+    }
+
+    /**	
+    * init the quality input textbox
+    */
+    $scope.init_input = function(){
+    	// $("input[name='quality']").TouchSpin({
+     //        min: 1,
+     //        max: 30,
+     //        stepinterval: 1
+     //    });
+    }
+
+    /**
+    * recalculate the total price
+    */
     $scope.summary_price = function(){
     	
-    	var sum = 0;
+    	var sum = 0
+    	var quality = 0
     	for (var i in $scope.products){
-    		sum += $scope.products[i].quality * $scope.products[i].price
+    		//console.log('xxx')
+    		var q = parseInt($scope.products[i].quality)
+    		if (isNaN(q)){
+    			q = 1
+    			$scope.products[i].quality = 1
+    		}
+    		sum += q * $scope.products[i].price
+
+    		quality += q
     	}
-    	$scope.summary = sum
+    	$scope.total_item = quality
+    	$scope.total_price = sum
+    	//$scope.$apply()
+		$scope.save()
+    }
+
+
+    $scope.save = function(){
+    	if(typeof(localStorage) !== "undefined") {
+    		localStorage.setItem("db", JSON.stringify($scope.db));
+    		localStorage.setItem("products", JSON.stringify($scope.products));
+    		localStorage.setItem("config", JSON.stringify($scope.config));
+		} else {
+		    console.log('not support')
+		}
+    }
+
+    $scope.load = function(){
+    	if(typeof(localStorage) !== "undefined") {
+		    $scope.db =  $scope.read("db", {})
+	        $scope.products =$scope.read("products", [])
+	        $scope.config =$scope.read("config", $scope.config)
+	        $scope.summary_price()
+		} else {
+		    console.log('not support')
+		}
+    }
+
+    $scope.read = function(item, def){
+    	if(localStorage.getItem(item)!=undefined){
+    		return JSON.parse(localStorage.getItem(item))
+    	} else {
+    		return def
+    	}
     }
 
     //init current app.controller
@@ -100,7 +193,10 @@ app.controller('cartCtrl', function($scope) {
 
 });
 
-
+/**
+* hacked angular's method
+* add a product into the cart
+*/
 function hack_add(itemid){
   	var scope = angular.element($("#capp")).scope()
   	var quality = $('#quality'+itemid).val()

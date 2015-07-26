@@ -14,7 +14,7 @@ module.exports = {
         // TODO: update to sync all products
         WeidianService.get_products(page, 200, 1, function(products) {
 
-            if (products && products.result.items && products.result.items) {
+            if (products && products.result && products.result.items) {
                 
                 //sails.log.debug(JSON.stringify(products))
 
@@ -36,33 +36,37 @@ module.exports = {
                                 updatelist.push(items[i])
                                 sails.log.debug('exist id ' + items[i].itemid)
                             }
-
+                        }
+                        if(newlist.length>0){
                             Product.create(newlist)
                                 .then(function(){
-                                    // if (callback) {
-                                    // callback()
-                                    // }
+                                    if (callback) {
+                                        callback(newlist)
+                                    }
                                 })
                                 .catch(function (err) {
                                     sails.log.error(err)
                                 });
-                            // .exec(function createCB(err, created) {
-                            //     console.log('sync done');
-                            //     if(err){
-                            //         sails.log.error(err)
-                            //     }
-                            //     if (callback) {
-                            //         callback()
-                            //     }
-                            //});
+                        } else {
+                            if (callback) {
+                                callback()
+                            }
                         }
                     })
                     .catch(function (err) {
                         sails.log.error(err)
+                            if (callback) {
+                                callback()
+                            }
                     });
                 
             } else {
+                if (callback) {
+                    callback()
+                }
                 sails.log.error('sync error')
+                sails.log.error(JSON.stringify(products))
+                
             }
         })
     }

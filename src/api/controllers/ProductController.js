@@ -11,7 +11,17 @@ module.exports = {
      * `ProductController.index()`
      */
     index: function(req, res) {
-        return res.view()
+        //show message for only once
+        var showmsg = false
+        if(req.session.sync_message){
+            showmsg = true
+            req.session.sync_message = undefined
+        }
+
+        return res.view('product/index', {
+            showmsg : showmsg,
+            msg : "Sync complete"
+        } )
     },
 
     /**
@@ -65,6 +75,10 @@ module.exports = {
      * `ProductController.sync()`
      */
     sync: function(req, res) {
-        return res.view()
+        WeidianService.init_token()
+        ProductService.sync(1, function(){
+            req.session.sync_message=1
+            return res.redirect('/product/')
+        })
     }
 };

@@ -1,4 +1,13 @@
 {
+	"Please Sign In":"Please Sign In",
+	"Login" : "Login",
+	"Logout" : "Logout",
+	"E-mail": "E-mail",
+	"Password": "Password",
 	"Welcome": "Welcome",
-	"A brand new app.": "A brand new app."
+	"Home": "Home",
+	"Products": "Products",
+	"Orders": "Orders",
+	"Suppliers": "Suppliers",
+	"Customers": "Customers"
 }

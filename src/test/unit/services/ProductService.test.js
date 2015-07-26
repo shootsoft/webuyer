@@ -8,7 +8,7 @@ describe.only('ProductService', function() {
         it('sync weidian products to local db', function(done) {
             WeidianService.init_token()
             ProductService.sync(1, function(){
-                sails.log.debug('mb')
+                sails.log.debug('callback called')
                 done()  
             })
             setTimeout(function(){

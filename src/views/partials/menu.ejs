@@ -13,7 +13,7 @@
 
     <ul class="nav navbar-top-links navbar-right">
         <%if ('undefined' != typeof req.session.user){%>
-        <li>Welcome <%=req.session.user.email%></li>
+        <li><%= __('Welcome') %> <%=req.session.user.email%></li>
         <%}%>
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -21,21 +21,10 @@
             </a>
             <ul class="dropdown-menu dropdown-user">
                 <li>
-                    <a href="#">
-                        <div>
-                            简体中文
-                        </div>
-                        <div></div>
-                    </a>
+                    <a href="/lang/?lang=cn">简体中文</a>
                 </li>
                 <li>
-                    <a href="#">
-                        <div>
-                            <strong>English</strong>
-
-                        </div>
-                        <div></div>
-                    </a>
+                    <a href="/lang/?lang=en">English</a>
                 </li>
             </ul>
             <!-- /.dropdown-messages -->
@@ -102,10 +91,10 @@
             </a>
             <ul class="dropdown-menu dropdown-user">
                 <%if ('undefined' == typeof req.session.user){%>
-                <li><a href="/account/login"><i class="fa fa-sign-in fa-fw"></i> Login</a>
+                <li><a href="/account/login"><i class="fa fa-sign-in fa-fw"></i> <%= __('Login') %></a>
                 </li>
                 <%} else {%>
-                <li><a href="/account/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                <li><a href="/account/logout"><i class="fa fa-sign-out fa-fw"></i> <%= __('Logout') %></a>
                 </li>
                 <%}%>
             </ul>
@@ -133,20 +122,20 @@
                     <!-- /input-group -->
                 <!-- /li-->
                 <li>
-                    <a href="/home/"><i class="fa fa-dashboard fa-fw"></i> Home</a>
+                    <a href="/home/"><i class="fa fa-dashboard fa-fw"></i> <%= __('Home') %></a>
                 </li>
                 <li>
-                    <a href="/product/"><i class="fa fa-shopping-cart fa-fw"></i> Products</a>
+                    <a href="/product/"><i class="fa fa-shopping-cart fa-fw"></i> <%= __('Products') %></a>
                 </li>
                 <li>
-                    <a href="/orderadmin/"><i class="fa fa-edit fa-fw"></i> Orders</a>
+                    <a href="/orderadmin/"><i class="fa fa-edit fa-fw"></i> <%= __('Orders') %></a>
                 </li>
                 <li class="active">
-                    <a href="/products/admin"><i class="fa fa-list-alt fa-fw"></i> Suppliers</a>
+                    <a href="/products/admin"><i class="fa fa-list-alt fa-fw"></i> <%= __('Suppliers') %></a>
                 </li>
                 
                 <li>
-                    <a href="/users/admin"><i class="fa fa-users fa-fw"></i> Users</a>
+                    <a href="/users/admin"><i class="fa fa-users fa-fw"></i> <%= __('Customers') %></a>
                 </li>
             </ul>
         </div>

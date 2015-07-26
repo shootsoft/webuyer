@@ -2,6 +2,16 @@ $(document).ready(function() {
     $('#genorder').bind('click', function() {
         $('#orderform').submit()
     })
+
+    if($('#msg')){
+        setTimeout(function(){
+            $('#msg').hide(500)
+        }, 3000)
+    }
+
+    $('#sync').bind('click', function(){
+        window.location = '/product/sync'
+    })
 });
 
 var app = angular.module('cartApp', ['ngCart'])

@@ -48,8 +48,9 @@ module.exports.policies = {
 		// before letting any users feed our rabbits
 		// feed : ['isNiceToAnimals', 'hasRabbitFood']
 	// }
+  '*': 'i18nPolicy',
 
   HomeController:{
-    '*': 'sessionAuth'
+    '*': ['i18nPolicy','sessionAuth']
   }
 };

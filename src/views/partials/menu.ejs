@@ -13,7 +13,7 @@
 
     <ul class="nav navbar-top-links navbar-right">
         <%if ('undefined' != typeof req.session.user){%>
-        <li><%= __('Welcome') %> <%=req.session.user.email%></li>
+        <li><%= __('Welcome') %> <%=req.session.user.email%> <%=JSON.stringify(req.referer)%></li>
         <%}%>
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -128,7 +128,7 @@
                     <a href="/product/"><i class="fa fa-shopping-cart fa-fw"></i> <%= __('Products') %></a>
                 </li>
                 <li>
-                    <a href="/orderadmin/"><i class="fa fa-edit fa-fw"></i> <%= __('Orders') %></a>
+                    <a href="/order/"><i class="fa fa-edit fa-fw"></i> <%= __('Orders') %></a>
                 </li>
                 <li class="active">
                     <a href="/products/admin"><i class="fa fa-list-alt fa-fw"></i> <%= __('Suppliers') %></a>

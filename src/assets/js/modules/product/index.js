@@ -14,7 +14,7 @@ $(document).ready(function() {
     })
 });
 
-var app = angular.module('cartApp', ['ngCart'])
+var app = angular.module('cartApp', [])
 app.controller('cartCtrl', function($scope) {
 	/**
 	* init the controller

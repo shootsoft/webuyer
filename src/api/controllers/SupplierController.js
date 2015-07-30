@@ -13,9 +13,19 @@ module.exports = {
      * `SupplierController.index()`
      */
     index: function(req, res) {
-        return res.view();
+        return res.view('supplier/index', {
+            footer : [
+                '/js/modules/supplier/index.js'
+            ]
+        });
     },
 
+    test: function(req, res){
+        return res.view('test', {
+          msg: 'Please input your email and password',
+          layout: ''
+        })
+    },
 
     /**
      * `SupplierController.query()`

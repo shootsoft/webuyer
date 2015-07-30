@@ -1,6 +1,9 @@
 <!-- Bootstrap Core JavaScript -->
 <script src="/admin/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
+<!-- Angular -->
+<script type="text/javascript" src="/admin/bower_components/angular/angular.min.js"></script>
+
 <!-- Metis Menu Plugin JavaScript -->
 <script src="/admin/bower_components/metisMenu/dist/metisMenu.min.js"></script>
 
@@ -8,6 +11,15 @@
 <script src="/admin/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
 <script src="/admin/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
+<script type="text/javascript" src="/admin/bower_components/angular-datatables/dist/angular-datatables.js"></script>
+
+
 <!-- Custom Theme JavaScript -->
 <script src="/admin/dist/js/sb-admin-2.js"></script>
 
+<%if ('undefined' != typeof footer){
+	for (var i in footer){%>
+<script type="text/javascript" src="<%=footer[i]%>"></script>
+	<%}
+}
+%>

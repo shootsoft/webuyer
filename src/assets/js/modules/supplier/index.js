@@ -53,7 +53,18 @@ app.controller('supplierCtrl', function($scope, $compile, DTOptionsBuilder, DTCo
      * add new supplier
      */
     $scope.save = function() {
-        $scope.dtInstance.reloadData();
+     
+        $.blockUI();
+        //$.ajax()
+
+        setTimeout(function(){
+            $.unblockUI();
+            toastr.success('Success')
+            $scope.dtInstance.reloadData()
+        }, 3000)
+        
+        console.log(JSON.stringify($scope.supplier))
+        
     }
 
     /**
@@ -72,7 +83,7 @@ app.controller('supplierCtrl', function($scope, $compile, DTOptionsBuilder, DTCo
             .withDataProp('data')
             .withOption('processing', true)
             .withOption('serverSide', true)
-            //.withOption('aDataSort', true)
+            .withOption('responsive', true)
             .withPaginationType('full_numbers')
             .withOption('createdRow', function(row, data, dataIndex) {
                 // Recompiling so we can bind Angular directive to the DT

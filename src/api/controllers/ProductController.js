@@ -28,7 +28,7 @@ module.exports = {
      * `ProductController.sync()`
      */
     query: function(req, res) {
-        var cols = ['item_desc', 'price', 'item_desc', 'createdAt']
+        var cols = ['item_id', 'price', 'cost', 'item_desc', 'createdAt']
         var all = req.allParams();
         var search = req.param('search')
         var order = req.param('order')

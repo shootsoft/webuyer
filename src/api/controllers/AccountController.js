@@ -6,8 +6,6 @@
  */
 
 module.exports = {
-	
-
 
    /**
    * `AccountController.login()`

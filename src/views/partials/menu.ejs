@@ -13,7 +13,7 @@
 
     <ul class="nav navbar-top-links navbar-right">
         <%if ('undefined' != typeof req.session.user){%>
-        <li><%= __('Welcome') %> <%=req.session.user.email%> <%=JSON.stringify(req.referer)%></li>
+        <li><%= __('Welcome') %> <%=req.session.user.email%> </li>
         <%}%>
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">

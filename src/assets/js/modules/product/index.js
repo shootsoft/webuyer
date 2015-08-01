@@ -51,6 +51,8 @@ app.controller('cartCtrl', function($scope) {
             }, {
                 "data": "price"
             }, {
+                "data": "price_cost"
+            }, {
                 "data": "item_desc"
             }, {
                 "data": "createdAt",
@@ -61,7 +63,7 @@ app.controller('cartCtrl', function($scope) {
             "rowCallback": function(row, data, index) {
             	$scope.db[data.itemid] = data
                 $('td:eq(0)', row).html('<img class="responsive" alt="" src="' + data.thumb_imgs + '" />')
-                $('td:eq(3)', row).html('<select class="form-control" id="quality' + data.itemid + '"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>'
+                $('td:eq(4)', row).html('<select class="form-control" id="quality' + data.itemid + '"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select>'
                 	+'<button onclick="hack_add(' + data.itemid + ')" data-toggle="modal" data-target="#cart" class="btn btn-success">Order</button>')
             },
 

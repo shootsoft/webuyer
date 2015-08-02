@@ -41,6 +41,7 @@
     "bootstrap-touchspin":"",
     "angular-datatables":"",
     "toastr":"",
-    "blockUI":""
+    "blockUI":"",
+    "bootbox":"~4.4.0"
   }
 }

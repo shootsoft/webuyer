@@ -1,3 +1,4 @@
+<!-- .row title -->
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Supplier</h1>
@@ -7,7 +8,7 @@
 </div>
 <!-- /.row -->
 
-
+<!-- .row body -->
 <div class="row" id="capp" ng-app="supplierApp" ng-controller="supplierCtrl">
     <div class="row" style="margin-bottom:5px;">
         <div class="col-md-2">
@@ -100,7 +101,7 @@
                                             
                                             <div class="form-group">
                                                 <label>Index</label>
-                                                <select class="form-control" id="supplier_index" name="supplier_index">
+                                                <select class="form-control" id="supplier_index" name="supplier_index" >
                                                     <option ng-repeat="item in supplier_index" 
                                                     ng-selected="supplier.index == item"
                                                         ng-value="item">{{item}}</option>
@@ -124,7 +125,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="genorder" ng-click="save()" data-dismiss="modal">Submit</button>
+                        <button type="button" class="btn btn-primary" id="saveButton" ng-click="save()" data-dismiss="modal">Submit</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->

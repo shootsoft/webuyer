@@ -23,6 +23,7 @@
     "sails": "~0.11.0",
     "sails-disk": "~0.10.0",
     "sails-mysql": "~0.11.0",
+    "sails-generate-scaffold": "",
     "request": "~2.60.0",
     "rest-client": "~0.1.5",
     "promise": "~7.0.3"

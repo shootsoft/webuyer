@@ -81,20 +81,21 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>Product</th>
                                         <th>Price(￥)</th>
                                         <th>Quality</th>
                                         <th>Total(￥)</th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tr ng-repeat="x in products">
+                                    <td><button type="button" class="close" aria-hidden="true" ng-click="remove(x.itemid)">×</button></td>
                                     <td>{{ x.item_name }}<input type="hidden" value="{{ x.itemid }}" name="itemid"/></td>
                                     <td>{{ x.price }}</td>
                                     <td><input class="form-control" type="number" min="1" max="50" style="width:70px" ng-model="x.quality" value="{{ x.quality }}" ng-change="summary_price()" name="quality"/>
                                     </td>
                                     <td>{{ x.quality * x.price }}</td>
-                                    <td><button type="button" class="close" aria-hidden="true" ng-click="remove(x.itemid)">×</button></td>
+                                    
                                 </tr>
                                 <tr>
                                     <td colspan="5">Total: {{total_price}}￥</td>

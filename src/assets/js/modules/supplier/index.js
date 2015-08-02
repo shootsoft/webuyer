@@ -1,16 +1,5 @@
-$(document).ready(function() {
-
-    if ($('#msg')) {
-        setTimeout(function() {
-            $('#msg').hide(500)
-        }, 3000)
-    }
-
-
-});
-
 var app = angular.module('supplierApp', ['datatables'])
-app.controller('supplierCtrl', function($scope, $compile, DTOptionsBuilder, DTColumnBuilder) {
+app.controller('supplierCtrl', function($scope, $compile, $http, DTOptionsBuilder, DTColumnBuilder) {
 
     /**
      * init the controller
@@ -20,7 +9,7 @@ app.controller('supplierCtrl', function($scope, $compile, DTOptionsBuilder, DTCo
         $scope.supplier = {}
         $scope.suppliers = {}
         $scope.dtInstance = {};
-        $scope.supplier_index=[0,1,2,3,4,5,6,7,8,9,10]
+        $scope.supplier_index = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         $scope.init_dataTable()
         $scope.new()
     }
@@ -29,10 +18,9 @@ app.controller('supplierCtrl', function($scope, $compile, DTOptionsBuilder, DTCo
      * edit the supplier
      */
     $scope.edit = function(id) {
-
+        $('#saveButton').show()
         $scope.supplier = $scope.db[id]
-
-        console.log('edit')
+            //console.log('edit')
 
     }
 
@@ -40,6 +28,7 @@ app.controller('supplierCtrl', function($scope, $compile, DTOptionsBuilder, DTCo
      * add new supplier
      */
     $scope.new = function() {
+        $('#saveButton').show()
         $scope.supplier = {
             id: 0,
             name: 'example name',
@@ -49,22 +38,85 @@ app.controller('supplierCtrl', function($scope, $compile, DTOptionsBuilder, DTCo
         }
     }
 
+    $scope.view = function(id){
+        $('#saveButton').hide();
+        $scope.supplier = $scope.db[id]
+    }
+
     /**
-     * add new supplier
+     * confirm to delete supplier
+     */
+    $scope.remove = function(id) {
+        var supplier = $scope.db[id]
+        if (supplier) {
+            bootbox.dialog({
+                title: 'Confirm remove ' + supplier.name,
+                message: 'Warning: all this supplier\'s data will be removed!',
+                buttons: {
+                    success: {
+                        label: "Cancel",
+                        className: "btn-default",
+                        callback: function() {
+                            console.log('cancel')
+                        }
+                    },
+                    ok: {
+                        label: "OK",
+                        className: "btn-primary",
+                        callback: function() {
+                            $http.post('/supplier/remove', {id: id}, {
+                                responseType: 'json'
+                            }).success(function(data, status, headers, config) {
+                                $.unblockUI()
+
+                                if (data && data.success) {
+                                    toastr.success('Success')
+                                    $scope.dtInstance.reloadData()
+                                } else if (data && data.msg) {
+                                    toastr.error(data.msg)
+                                } else {
+                                    toastr.error('Server error')
+                                }
+
+                            }).error(function(data, status, headers, config) {
+                                $.unblockUI();
+                                toastr.error('Server error e')
+                            })
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    /**
+     * add or update supplier
      */
     $scope.save = function() {
-     
-        $.blockUI();
-        //$.ajax()
 
-        setTimeout(function(){
+        $.blockUI({
+            message: '<img src="/images/loading-spinner-grey.gif" /> Updating...'
+        })
+        $scope.supplier.index = $('#supplier_index').val()
+
+        $http.post('/supplier/update', $scope.supplier, {
+            responseType: 'json'
+        }).success(function(data, status, headers, config) {
+            $.unblockUI()
+
+            if (data && data.success) {
+                toastr.success('Success')
+                $scope.dtInstance.reloadData()
+            } else if (data && data.msg) {
+                toastr.error(data.msg)
+            } else {
+                toastr.error('Server error')
+            }
+
+        }).error(function(data, status, headers, config) {
             $.unblockUI();
-            toastr.success('Success')
-            $scope.dtInstance.reloadData()
-        }, 3000)
-        
-        console.log(JSON.stringify($scope.supplier))
-        
+            toastr.error('Server error e')
+        })
     }
 
     /**
@@ -90,60 +142,20 @@ app.controller('supplierCtrl', function($scope, $compile, DTOptionsBuilder, DTCo
                 $compile(angular.element(row).contents())($scope);
             });
         $scope.dtColumns = [
-            DTColumnBuilder.newColumn('id').withTitle('ID'),
-            DTColumnBuilder.newColumn('name').withTitle('Name'),
-            DTColumnBuilder.newColumn('index').withTitle('Index'),
-            DTColumnBuilder.newColumn('location').withTitle('Location'),
-            DTColumnBuilder.newColumn('open_date').withTitle('Open Date'),
-            DTColumnBuilder.newColumn('updatedAt').withTitle('Updated At'),
-            DTColumnBuilder.newColumn('createdAt').withTitle('').notSortable().renderWith(function(col, type, row) {
-                $scope.db[row.id] = row
-                return '<button ng-click="edit(' + row.id + ')" data-toggle="modal" ' 
-                     + 'data-target="#edit_supplier" class="btn btn-success btn-circle">'
-                     + '<i class="fa fa-edit"></i></button>'
-            })
-        ]
-        // $('#dataTables-example').DataTable({
-        //     "processing": true,
-        //     "serverSide": true,
-        //     "ajax": {
-        //         "url": "/supplier/query",
-        //         "type": "POST"
-        //     },
-        //     "columns": [{
-        //         "data": "id"
-        //     }, {
-        //         "data": "name"
-        //     }, {
-        //         "data": "index"
-        //     }, {
-        //         "data": "location"
-        //     }, {
-        //         "data": "open_date",
-        //         "orderable": false
-        //     }, {
-        //         "data": "updatedAt",
-        //     }, {
-        //         "data": "createdAt",
-        //         "orderable": false
-        //     }],
-        //     //TODO: set last column order false
-        //     responsive: true,
-        //     "rowCallback": function(row, data, index) {
-        //         $scope.db[data.id] = data
-        //      //$scope.db[data.itemid] = data
-        //         //$('td:eq(0)', row).html('<img class="responsive" alt="" src="' + data.thumb_imgs + '" />')
-        //         $('td:eq(6)', row).html('<button ng-click="edit(' + data.id + ')" data-toggle="modal" data-target="#edit_supplier" class="btn btn-success btn-circle"><i class="fa fa-edit" title="Edit"></i> </button> '
-        //             + '<button onclick="remove(' + data.id + ')" data-toggle="modal" data-target="#edit_supplier" class="btn btn-default btn-circle"><i class="fa fa-remove" title="Remove"></i> </button>')
-        //     },
-
-        //     "drawCallback": function(settings) {
-        //         // tooltip demo
-        //         //$('.desctip').tooltip()
-        //         $scope.$apply()
-        //     }
-
-        // })
+                DTColumnBuilder.newColumn('id').withTitle('ID'),
+                DTColumnBuilder.newColumn('name').withTitle('Name'),
+                DTColumnBuilder.newColumn('index').withTitle('Index'),
+                DTColumnBuilder.newColumn('location').withTitle('Location'),
+                DTColumnBuilder.newColumn('open_date').withTitle('Open Date'),
+                DTColumnBuilder.newColumn('updatedAt').withTitle('Updated At'),
+                DTColumnBuilder.newColumn('createdAt').withTitle('').notSortable().renderWith(function(col, type, row) {
+                    $scope.db[row.id] = row
+                    return '<button ng-click="view(' + row.id + ')" class="btn btn-default btn-circle" data-toggle="modal"  data-target="#edit_supplier" ><i class="fa fa-eye"></i></button> '
+                         + '<button ng-click="edit(' + row.id + ')" class="btn btn-success btn-circle" data-toggle="modal"  data-target="#edit_supplier"><i class="fa fa-edit"></i></button> ' 
+                         + '<button ng-click="remove(' + row.id + ')" class="btn btn-warning btn-circle" data-toggle="modal" data-target="#edit_supplier" ><i class="fa fa-remove"></i></button>'
+                        
+                })
+            ]
     }
 
 
@@ -151,11 +163,3 @@ app.controller('supplierCtrl', function($scope, $compile, DTOptionsBuilder, DTCo
     $scope.init()
 
 });
-
-/**
- * hacked angular's method
- * add a product into the cart
- */
-function edit(itemid) {
-console.log('edit2')
-}

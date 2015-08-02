@@ -49,41 +49,15 @@ app.controller('supplierCtrl', function($scope, $compile, $http, DTOptionsBuilde
     $scope.remove = function(id) {
         var supplier = $scope.db[id]
         if (supplier) {
-            bootbox.dialog({
+            ngcurd.confirm({
                 title: 'Confirm remove ' + supplier.name,
                 message: 'Warning: all this supplier\'s data will be removed!',
-                buttons: {
-                    success: {
-                        label: "Cancel",
-                        className: "btn-default",
-                        callback: function() {
-                            console.log('cancel')
+                ok: function() {
+                    ngcurd.post('/supplier/remove', {id: id}, {
+                        success: function(){
+                            $scope.dtInstance.reloadData()
                         }
-                    },
-                    ok: {
-                        label: "OK",
-                        className: "btn-primary",
-                        callback: function() {
-                            $http.post('/supplier/remove', {id: id}, {
-                                responseType: 'json'
-                            }).success(function(data, status, headers, config) {
-                                $.unblockUI()
-
-                                if (data && data.success) {
-                                    toastr.success('Success')
-                                    $scope.dtInstance.reloadData()
-                                } else if (data && data.msg) {
-                                    toastr.error(data.msg)
-                                } else {
-                                    toastr.error('Server error')
-                                }
-
-                            }).error(function(data, status, headers, config) {
-                                $.unblockUI();
-                                toastr.error('Server error e')
-                            })
-                        }
-                    }
+                    })
                 }
             })
         }
@@ -94,28 +68,11 @@ app.controller('supplierCtrl', function($scope, $compile, $http, DTOptionsBuilde
      */
     $scope.save = function() {
 
-        $.blockUI({
-            message: '<img src="/images/loading-spinner-grey.gif" /> Updating...'
-        })
         $scope.supplier.index = $('#supplier_index').val()
-
-        $http.post('/supplier/update', $scope.supplier, {
-            responseType: 'json'
-        }).success(function(data, status, headers, config) {
-            $.unblockUI()
-
-            if (data && data.success) {
-                toastr.success('Success')
+        ngcurd.post('/supplier/update', $scope.supplier, {
+            success: function(){
                 $scope.dtInstance.reloadData()
-            } else if (data && data.msg) {
-                toastr.error(data.msg)
-            } else {
-                toastr.error('Server error')
             }
-
-        }).error(function(data, status, headers, config) {
-            $.unblockUI();
-            toastr.error('Server error e')
         })
     }
 
@@ -126,8 +83,6 @@ app.controller('supplierCtrl', function($scope, $compile, $http, DTOptionsBuilde
 
         $scope.dtOptions = DTOptionsBuilder.newOptions()
             .withOption('ajax', {
-                // Either you specify the AjaxDataProp here
-                // dataSrc: 'data',
                 url: '/supplier/query',
                 type: 'POST'
             })
